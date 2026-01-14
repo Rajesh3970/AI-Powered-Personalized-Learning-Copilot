@@ -8,15 +8,18 @@ pydantic-settings==2.1.0
 # Database
 sqlalchemy==2.0.25
 psycopg2-binary==2.9.9
+
+# Authentication
 python-jose[cryptography]==3.3.0
+bcrypt==4.0.1
 passlib[bcrypt]==1.7.4
 python-dotenv==1.0.0
 
-# LLM & RAG (as per documentation)
-google-generativeai==0.3.2
-langchain==0.1.0
-langchain-google-genai==0.0.6
-langchain-community==0.0.20
+# LLM & RAG - UPDATED VERSIONS
+google-generativeai==0.8.3
+langchain==0.3.13
+langchain-google-genai==2.0.5
+langchain-community==0.3.13
 
 # Embeddings & Vector Store
 chromadb==0.4.22
@@ -27,5 +30,4 @@ pymupdf==1.23.8
 pypdf==3.17.4
 
 # Utilities
-python-dotenv==1.0.0
 numpy==1.26.3
