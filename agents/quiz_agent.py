@@ -61,45 +61,75 @@ class QuizGenerationAgent:
             context = f"General knowledge about {topic}"
         
         # Enhanced prompt for better quiz generation
-        prompt = f"""You are an expert quiz creator. Generate {num_questions} high-quality multiple-choice questions about {topic}.
+        prompt = f"""You are an expert educator creating a comprehensive quiz.
 
-IMPORTANT INSTRUCTIONS:
-1. Use the provided course content to create questions with REAL, SPECIFIC information
-2. Each question should test deep understanding, not just memorization
-3. All 4 options must be plausible and based on actual concepts
-4. DO NOT use generic options like "Concept A", "Concept B", "Option 1", "Option 2"
-5. Options should be specific, detailed, and factually accurate
-6. Include brief explanations that teach the correct answer
+Topic: {topic}
+Difficulty: {difficulty}
+Number of Questions: {num_questions}
 
-Difficulty Level: {difficulty}
-- Easy: Basic definitions and concepts
-- Medium: Application and analysis
-- Hard: Complex scenarios and synthesis
+STRICT REQUIREMENTS:
+1. Create HIGHLY SPECIFIC questions that test deep understanding
+2. Use CONCRETE examples, numbers, and real-world scenarios
+3. Options must be DETAILED (15-30 words each), not single words or short phrases
+4. Each option should represent a complete, plausible answer
+5. Draw from the course content below when available
+6. For technical topics: include code snippets, algorithms, or technical details
+7. For conceptual topics: include real examples and applications
 
-Course Content:
+QUESTION TYPES TO USE:
+- Scenario-based: "Given situation X, what would happen if Y?"
+- Analytical: "Which approach would be most efficient for problem X and why?"
+- Comparative: "What is the key difference between concept A and concept B?"
+- Application: "In a real-world scenario involving X, which solution is best?"
+- Problem-solving: "How would you solve this specific problem using concept X?"
+
+COURSE CONTENT (Use this to create specific questions):
 {context}
 
-Generate questions in this EXACT JSON format (no markdown, no extra text):
+DIFFICULTY GUIDELINES:
+- Easy: Test basic understanding with clear scenarios (e.g., "What happens when you insert 5 into an empty BST?")
+- Medium: Test application and reasoning (e.g., "Given a BST with values [10,5,15,3,7], what's the in-order traversal?")
+- Hard: Test synthesis and edge cases (e.g., "In a concurrent system with multiple threads accessing a BST, which synchronization approach prevents deadlock while maintaining O(log n) search time?")
+
+EXAMPLE OF GOOD QUESTION:
+{{
+    "question": "You have a binary search tree containing the values [50, 30, 70, 20, 40, 60, 80]. If you perform an in-order traversal, which sequence will you get?",
+    "options": [
+        "20, 30, 40, 50, 60, 70, 80 - because in-order traversal visits left subtree, root, then right subtree in sorted order",
+        "50, 30, 70, 20, 40, 60, 80 - because we visit nodes in the order they were inserted into the tree",
+        "20, 40, 30, 60, 80, 70, 50 - because we visit leaf nodes first, then work our way up to the root",
+        "50, 30, 20, 40, 70, 60, 80 - because we visit root first, then recursively visit left and right subtrees"
+    ],
+    "correct_index": 0,
+    "explanation": "In-order traversal follows the pattern: visit left subtree, visit root, visit right subtree. For a BST, this always produces elements in ascending sorted order because all left children are smaller and all right children are larger than the parent."
+}}
+
+EXAMPLE OF BAD QUESTION (DO NOT CREATE):
+{{
+    "question": "What is a BST?",
+    "options": ["A tree", "A data structure", "A type of algorithm", "A sorting method"]
+}}
+
+Return ONLY valid JSON in this exact format (no markdown, no code blocks):
 {{
     "topic": "{topic}",
     "difficulty_level": "{difficulty}",
     "questions": [
         {{
-            "question": "A clear, specific question about the topic?",
+            "question": "Specific, detailed question with context and scenario?",
             "options": [
-                "Detailed option A with real information",
-                "Detailed option B with real information",
-                "Detailed option C with real information",
-                "Detailed option D with real information"
+                "Detailed option explaining the full concept or approach with reasoning",
+                "Another complete answer with specific details and explanation",
+                "Third comprehensive option with concrete information",
+                "Fourth detailed option that is plausible but incorrect"
             ],
             "correct_index": 0,
-            "explanation": "Why this answer is correct and what the concept means"
+            "explanation": "Comprehensive explanation of why this is correct, including the underlying principle and how it applies"
         }}
     ]
 }}
 
-Make questions challenging but fair. Use terminology from the course content when available.
-Return ONLY valid JSON, nothing else."""
+Generate {num_questions} questions following these guidelines exactly."""
 
         print(f"🤖 Generating {num_questions} {difficulty} questions...")
         response = self.llm.generate(prompt, temperature=0.8)
