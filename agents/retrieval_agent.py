@@ -39,21 +39,41 @@ class RetrievalAgent:
         context = "\n\n".join(context_parts)
         
         # Step 3: Generate citation-aware response
-        template = """You are a helpful course tutor. Answer the student's question using ONLY the provided course materials.
+        template = """
+You are a professional course tutor.
 
-IMPORTANT RULES:
-1. Base your answer ONLY on the context provided
-2. Cite sources explicitly (e.g., "According to [Source 1]...")
-3. If the answer isn't in the context, say so clearly
-4. Be concise but thorough
-5. Use simple, clear language
+INSTRUCTIONS:
+- Use ONLY the provided context
+- Do NOT add outside knowledge
+- If the answer is missing, clearly say so
+- Organize the answer using:
+  - Headings
+  - Bullet points
+  - Numbered steps (if applicable)
+- Cite sources inline like: (Source 1), (Source 2)
 
-Context from course materials:
+FORMAT (MANDATORY):
+## Short Answer
+1–2 sentences summary
+
+## Detailed Explanation
+- Bullet points or short paragraphs
+
+## Key Points
+- Point 1
+- Point 2
+
+## Sources Used
+- Source numbers only
+
+CONTEXT:
 {context}
 
-Student Question: {question}
+QUESTION:
+{question}
 
-Answer:"""
+ANSWER:
+"""
 
         variables = {
             "context": context,
