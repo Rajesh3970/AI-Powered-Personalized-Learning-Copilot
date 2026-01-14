@@ -23,6 +23,9 @@ createdb learning_copilot
 ```
 #4. Configure Environment
 Create .env:
+- Get API key from makersuite Google Gemini
+- Create the Secret Key for jwt using openssl
+- Provide the correct username and password for psql
 ```bash
 GEMINI_API_KEY=your_api_key
 DATABASE_URL=postgresql://postgres:password@localhost:5432/learning_copilot
