@@ -490,10 +490,10 @@
 
             <!-- Navigation Tabs -->
             <div class="nav-tabs">
-                <button class="nav-tab active" onclick="showTab('courses')">📚 Courses</button>
-                <button class="nav-tab" onclick="showTab('qa')">💬 Q&A</button>
-                <button class="nav-tab" onclick="showTab('plan')">📅 Study Plan</button>
-                <button class="nav-tab" onclick="showTab('quiz')">✏️ Quiz</button>
+                <button class="nav-tab active" onclick="showTab(event, 'courses')">📚 Courses</button>
+                <button class="nav-tab" onclick="showTab(event, 'qa')">💬 Q&A</button>
+                <button class="nav-tab" onclick="showTab(event, 'plan')">📅 Study Plan</button>
+                <button class="nav-tab" onclick="showTab(event, 'quiz')">✏️ Quiz</button>
             </div>
 
             <!-- Courses Section -->
@@ -563,7 +563,7 @@
             </div>
         </div>
     </div>
-
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script>
         const API_BASE = 'http://localhost:8000';
         let currentUser = null;
@@ -784,10 +784,12 @@
                 });
 
                 const data = await response.json();
-                
+                const formattedAnswer = marked.parse(data.answer);
                 chatMessages.innerHTML += `
                     <div class="message assistant">
-                        ${data.answer}
+			<div class="answer-content">
+				${formattedAnswer}
+			</div>
                         ${data.sources && data.sources.length > 0 ? 
                             `<div class="sources">📚 Sources: ${data.sources.join(', ')}</div>` : ''}
                     </div>
@@ -802,7 +804,7 @@
 
         // Study Plan Functions
         async function generatePlan(courseName) {
-            showTab('plan');
+            showTab(event, 'plan');
             document.getElementById('studyPlanContent').innerHTML = '<div class="spinner"></div>';
 
             try {
@@ -945,7 +947,7 @@
         }
 
         // Tab Navigation
-        function showTab(tabName) {
+        function showTab(event, tabName) {
             const tabs = document.querySelectorAll('.nav-tab');
             const sections = document.querySelectorAll('.content-section');
 
