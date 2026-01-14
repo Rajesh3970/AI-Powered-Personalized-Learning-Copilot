@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Powered Learning Copilot</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        header {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            color: #667eea;
+            font-size: 28px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        /* Authentication */
+        .auth-container {
+            max-width: 400px;
+            margin: 100px auto;
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        .auth-container h2 {
+            text-align: center;
+            color: #667eea;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+            width: 100%;
+        }
+
+        .btn-primary:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        .btn-success {
+            background: #48bb78;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #38a169;
+        }
+
+        /* Navigation Tabs */
+        .nav-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .nav-tab {
+            padding: 12px 24px;
+            border: none;
+            background: #f7f7f7;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .nav-tab.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .nav-tab:hover:not(.active) {
+            background: #e8e8e8;
+        }
+
+        /* Content Sections */
+        .content-section {
+            display: none;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        /* Course Cards */
+        .course-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .course-card {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid #e0e0e0;
+            transition: all 0.3s;
+        }
+
+        .course-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            border-color: #667eea;
+        }
+
+        .course-card h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .course-card p {
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .course-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        /* Chat Interface */
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            height: 600px;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .message {
+            margin-bottom: 15px;
+            padding: 12px 16px;
+            border-radius: 10px;
+            max-width: 70%;
+        }
+
+        .message.user {
+            background: #667eea;
+            color: white;
+            margin-left: auto;
+        }
+
+        .message.assistant {
+            background: #e8e8e8;
+            color: #333;
+        }
+
+        .message .sources {
+            margin-top: 10px;
+            font-size: 12px;
+            opacity: 0.8;
+        }
+
+        .chat-input-container {
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-input-container input {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        /* Study Plan */
+        .study-plan {
+            margin-top: 20px;
+        }
+
+        .week-plan {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 4px solid #667eea;
+        }
+
+        .week-plan h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .week-plan .topics {
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .week-plan .hours {
+            color: #48bb78;
+            font-weight: 600;
+        }
+
+        /* Quiz Interface */
+        .quiz-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .question {
+            background: #f9f9f9;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .question-text {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option {
+            padding: 15px;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .option:hover {
+            border-color: #667eea;
+            background: #f0f0ff;
+        }
+
+        .option.selected {
+            border-color: #667eea;
+            background: #e8e8ff;
+        }
+
+        .option.correct {
+            border-color: #48bb78;
+            background: #e6ffed;
+        }
+
+        .option.incorrect {
+            border-color: #f56565;
+            background: #fff5f5;
+        }
+
+        .quiz-score {
+            background: #667eea;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        /* File Upload */
+        .upload-area {
+            border: 2px dashed #667eea;
+            border-radius: 10px;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .upload-area:hover {
+            background: #f0f0ff;
+        }
+
+        .upload-area.dragover {
+            background: #e8e8ff;
+            border-color: #5568d3;
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .error {
+            color: #f56565;
+            background: #fff5f5;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .success {
+            color: #48bb78;
+            background: #e6ffed;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .text-link {
+            color: #667eea;
+            cursor: pointer;
+            text-decoration: underline;
+            margin-top: 15px;
+            display: inline-block;
+        }
+
+        .text-link:hover {
+            color: #5568d3;
+        }
+    </style>
+</head>
+<body>
+    <!-- Authentication Screen -->
+    <div id="authScreen" class="auth-container">
+        <h2>🎓 AI Learning Copilot</h2>
+        <div id="authMessage"></div>
+        
+        <div id="loginForm">
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" id="loginEmail" placeholder="Enter your email">
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="loginPassword" placeholder="Enter password">
+            </div>
+            <button class="btn btn-primary" onclick="login()">Login</button>
+            <p class="text-link" onclick="showRegister()">Don't have an account? Register</p>
+        </div>
+
+        <div id="registerForm" class="hidden">
+            <div class="form-group">
+                <label>Full Name</label>
+                <input type="text" id="registerName" placeholder="Enter your name">
+            </div>
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" id="registerEmail" placeholder="Enter your email">
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="registerPassword" placeholder="Create password">
+            </div>
+            <div class="form-group">
+                <label>Study Hours per Week</label>
+                <input type="number" id="registerHours" value="10" min="1" max="40">
+            </div>
+            <div class="form-group">
+                <label>Academic Goal (Optional)</label>
+                <textarea id="registerGoal" placeholder="What do you want to achieve?" rows="3"></textarea>
+            </div>
+            <button class="btn btn-primary" onclick="register()">Register</button>
+            <p class="text-link" onclick="showLogin()">Already have an account? Login</p>
+        </div>
+    </div>
+
+    <!-- Main Application -->
+    <div id="mainApp" class="hidden">
+        <div class="container">
+            <header>
+                <h1>🎓 AI Learning Copilot</h1>
+                <div class="user-info">
+                    <span id="userName">User</span>
+                    <button class="btn btn-secondary" onclick="logout()">Logout</button>
+                </div>
+            </header>
+
+            <!-- Navigation Tabs -->
+            <div class="nav-tabs">
+                <button class="nav-tab active" onclick="showTab('courses')">📚 Courses</button>
+                <button class="nav-tab" onclick="showTab('qa')">💬 Q&A</button>
+                <button class="nav-tab" onclick="showTab('plan')">📅 Study Plan</button>
+                <button class="nav-tab" onclick="showTab('quiz')">✏️ Quiz</button>
+            </div>
+
+            <!-- Courses Section -->
+            <div id="coursesSection" class="content-section active">
+                <h2>My Courses</h2>
+                <button class="btn btn-primary" onclick="showUploadForm()" style="margin-bottom: 20px;">➕ Add New Course</button>
+                
+                <div id="uploadForm" class="hidden" style="margin-bottom: 30px;">
+                    <h3>Upload Course Materials</h3>
+                    <div class="form-group">
+                        <label>Course Name</label>
+                        <input type="text" id="courseName" placeholder="e.g., Data Structures & Algorithms">
+                    </div>
+                    <div class="form-group">
+                        <label>Course Files (PDF)</label>
+                        <div class="upload-area" id="uploadArea" onclick="document.getElementById('fileInput').click()">
+                            <p>📄 Click or drag PDFs here</p>
+                            <input type="file" id="fileInput" multiple accept=".pdf" class="hidden" onchange="handleFiles(this.files)">
+                        </div>
+                        <div id="fileList"></div>
+                    </div>
+                    <button class="btn btn-success" onclick="uploadCourse()">Upload Course</button>
+                </div>
+
+                <div id="coursesList" class="course-grid"></div>
+            </div>
+
+            <!-- Q&A Section -->
+            <div id="qaSection" class="content-section">
+                <h2>Question & Answer</h2>
+                <p id="qaInfo" style="color: #666; margin-bottom: 20px;">Select a course from Courses tab first</p>
+                
+                <div id="qaInterface" class="hidden">
+                    <div class="chat-container">
+                        <div class="chat-messages" id="chatMessages">
+                            <p style="text-align: center; color: #999;">Ask questions about your course materials</p>
+                        </div>
+                        <div class="chat-input-container">
+                            <input type="text" id="questionInput" placeholder="Ask a question..." onkeypress="if(event.key==='Enter') askQuestion()">
+                            <button class="btn btn-primary" onclick="askQuestion()">Send</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Study Plan Section -->
+            <div id="planSection" class="content-section">
+                <h2>Study Plan</h2>
+                <p id="planInfo" style="color: #666; margin-bottom: 20px;">Generate a study plan from the Courses tab</p>
+                <div id="studyPlanContent" class="study-plan"></div>
+            </div>
+
+            <!-- Quiz Section -->
+            <div id="quizSection" class="content-section">
+                <h2>Adaptive Quiz</h2>
+                <p id="quizInfo" style="color: #666; margin-bottom: 20px;">Select a course and topic to generate a quiz</p>
+                
+                <div id="quizGenerator" class="hidden">
+                    <div class="form-group">
+                        <label>Quiz Topic</label>
+                        <input type="text" id="quizTopic" placeholder="Enter topic for quiz">
+                    </div>
+                    <button class="btn btn-success" onclick="generateQuiz()">Generate Quiz</button>
+                </div>
+
+                <div id="quizContent" class="quiz-container"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8000';
+        let currentUser = null;
+        let authToken = null;
+        let selectedCourse = null;
+        let courses = [];
+        let currentQuiz = null;
+        let quizAnswers = [];
+
+        // Authentication Functions
+        function showLogin() {
+            document.getElementById('loginForm').classList.remove('hidden');
+            document.getElementById('registerForm').classList.add('hidden');
+        }
+
+        function showRegister() {
+            document.getElementById('loginForm').classList.add('hidden');
+            document.getElementById('registerForm').classList.remove('hidden');
+        }
+
+        async function login() {
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            try {
+                const response = await fetch(`${API_BASE}/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    authToken = data.access_token;
+                    currentUser = data.user;
+                    localStorage.setItem('token', authToken);
+                    showMainApp();
+                } else {
+                    showMessage(data.detail || 'Login failed', 'error');
+                }
+            } catch (error) {
+                showMessage('Connection error. Make sure backend is running on port 8000', 'error');
+            }
+        }
+
+        async function register() {
+            const name = document.getElementById('registerName').value;
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            const hours = document.getElementById('registerHours').value;
+            const goal = document.getElementById('registerGoal').value;
+
+            try {
+                const response = await fetch(`${API_BASE}/auth/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email, password, name,
+                        study_hours_per_week: parseInt(hours),
+                        academic_goal: goal || null
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    authToken = data.access_token;
+                    currentUser = data.user;
+                    localStorage.setItem('token', authToken);
+                    showMainApp();
+                } else {
+                    showMessage(data.detail || 'Registration failed', 'error');
+                }
+            } catch (error) {
+                showMessage('Connection error', 'error');
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('token');
+            authToken = null;
+            currentUser = null;
+            document.getElementById('authScreen').classList.remove('hidden');
+            document.getElementById('mainApp').classList.add('hidden');
+        }
+
+        function showMainApp() {
+            document.getElementById('authScreen').classList.add('hidden');
+            document.getElementById('mainApp').classList.remove('hidden');
+            document.getElementById('userName').textContent = currentUser.name;
+            loadCourses();
+        }
+
+        function showMessage(message, type) {
+            const msgDiv = document.getElementById('authMessage');
+            msgDiv.innerHTML = `<div class="${type}">${message}</div>`;
+            setTimeout(() => msgDiv.innerHTML = '', 5000);
+        }
+
+        // Course Management
+        function showUploadForm() {
+            const form = document.getElementById('uploadForm');
+            form.classList.toggle('hidden');
+        }
+
+        function handleFiles(files) {
+            const fileList = document.getElementById('fileList');
+            fileList.innerHTML = Array.from(files).map(f => 
+                `<p>📄 ${f.name}</p>`
+            ).join('');
+        }
+
+        async function uploadCourse() {
+            const courseName = document.getElementById('courseName').value;
+            const files = document.getElementById('fileInput').files;
+
+            if (!courseName || files.length === 0) {
+                alert('Please enter course name and select files');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('course_name', courseName);
+            for (let file of files) {
+                formData.append('files', file);
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/upload`, {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${authToken}` },
+                    body: formData
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    alert('Course uploaded successfully!');
+                    document.getElementById('uploadForm').classList.add('hidden');
+                    document.getElementById('courseName').value = '';
+                    document.getElementById('fileInput').value = '';
+                    document.getElementById('fileList').innerHTML = '';
+                    loadCourses();
+                } else {
+                    alert(data.detail || 'Upload failed');
+                }
+            } catch (error) {
+                alert('Upload error');
+            }
+        }
+
+        async function loadCourses() {
+            try {
+                const response = await fetch(`${API_BASE}/courses`, {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+
+                courses = await response.json();
+                displayCourses();
+            } catch (error) {
+                console.error('Failed to load courses');
+            }
+        }
+
+        function displayCourses() {
+            const container = document.getElementById('coursesList');
+            
+            if (courses.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #999;">No courses yet. Upload your first course!</p>';
+                return;
+            }
+
+            container.innerHTML = courses.map(course => `
+                <div class="course-card">
+                    <h3>${course.course_name}</h3>
+                    <p>📁 ${course.files_count || 0} files</p>
+                    <div class="course-actions">
+                        <button class="btn btn-primary" onclick="selectCourse('${course.course_name}')">Select</button>
+                        <button class="btn btn-success" onclick="generatePlan('${course.course_name}')">Study Plan</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function selectCourse(courseName) {
+            selectedCourse = courseName;
+            document.getElementById('qaInfo').classList.add('hidden');
+            document.getElementById('qaInterface').classList.remove('hidden');
+            document.getElementById('quizInfo').classList.add('hidden');
+            document.getElementById('quizGenerator').classList.remove('hidden');
+            alert(`Selected: ${courseName}`);
+        }
+
+        // Q&A Functions
+        async function askQuestion() {
+            const question = document.getElementById('questionInput').value;
+            if (!question || !selectedCourse) return;
+
+            const chatMessages = document.getElementById('chatMessages');
+            chatMessages.innerHTML += `
+                <div class="message user">${question}</div>
+            `;
+
+            document.getElementById('questionInput').value = '';
+
+            try {
+                const response = await fetch(`${API_BASE}/qa/ask`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        course_name: selectedCourse,
+                        question: question
+                    })
+                });
+
+                const data = await response.json();
+                
+                chatMessages.innerHTML += `
+                    <div class="message assistant">
+                        ${data.answer}
+                        ${data.sources && data.sources.length > 0 ? 
+                            `<div class="sources">📚 Sources: ${data.sources.join(', ')}</div>` : ''}
+                    </div>
+                `;
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            } catch (error) {
+                chatMessages.innerHTML += `
+                    <div class="message assistant">Error getting answer</div>
+                `;
+            }
+        }
+
+        // Study Plan Functions
+        async function generatePlan(courseName) {
+            showTab('plan');
+            document.getElementById('studyPlanContent').innerHTML = '<div class="spinner"></div>';
+
+            try {
+                const response = await fetch(`${API_BASE}/plan/generate`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ course_name: courseName })
+                });
+
+                const data = await response.json();
+                displayStudyPlan(data);
+            } catch (error) {
+                document.getElementById('studyPlanContent').innerHTML = '<p>Failed to generate plan</p>';
+            }
+        }
+
+        function displayStudyPlan(plan) {
+            const container = document.getElementById('studyPlanContent');
+            
+            container.innerHTML = plan.weeks.map(week => `
+                <div class="week-plan">
+                    <h3>Week ${week.week_number}</h3>
+                    <p class="topics"><strong>Topics:</strong> ${week.topics}</p>
+                    <p class="hours">⏱️ ${week.allocated_hours} hours allocated</p>
+                </div>
+            `).join('');
+        }
+
+        // Quiz Functions
+        async function generateQuiz() {
+            const topic = document.getElementById('quizTopic').value;
+            if (!topic || !selectedCourse) return;
+
+            document.getElementById('quizContent').innerHTML = '<div class="spinner"></div>';
+
+            try {
+                const response = await fetch(`${API_BASE}/quiz/generate`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        course_name: selectedCourse,
+                        topic: topic
+                    })
+                });
+
+                currentQuiz = await response.json();
+                quizAnswers = new Array(currentQuiz.questions.length).fill(null);
+                displayQuiz();
+            } catch (error) {
+                document.getElementById('quizContent').innerHTML = '<p>Failed to generate quiz</p>';
+            }
+        }
+
+        function displayQuiz() {
+            const container = document.getElementById('quizContent');
+            
+            container.innerHTML = `
+                <h3>Quiz: ${currentQuiz.topic}</h3>
+                <p style="color: #666; margin-bottom: 20px;">Difficulty: ${currentQuiz.difficulty_level}</p>
+                ${currentQuiz.questions.map((q, qIdx) => `
+                    <div class="question">
+                        <div class="question-text">${qIdx + 1}. ${q.question}</div>
+                        <div class="options">
+                            ${q.options.map((opt, optIdx) => `
+                                <div class="option" onclick="selectOption(${qIdx}, ${optIdx})">
+                                    <input type="radio" name="q${qIdx}" value="${optIdx}">
+                                    <span>${opt}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `).join('')}
+                <button class="btn btn-primary" onclick="submitQuiz()">Submit Quiz</button>
+            `;
+        }
+
+        function selectOption(questionIdx, optionIdx) {
+            quizAnswers[questionIdx] = optionIdx;
+            
+            const options = document.querySelectorAll(`.question:nth-child(${questionIdx + 2}) .option`);
+            options.forEach((opt, idx) => {
+                opt.classList.remove('selected');
+                if (idx === optionIdx) {
+                    opt.classList.add('selected');
+                }
+            });
+        }
+
+        async function submitQuiz() {
+            let correct = 0;
+            const correctAnswers = currentQuiz.questions.map(q => q.correct_index);
+
+            currentQuiz.questions.forEach((q, idx) => {
+                const options = document.querySelectorAll(`.question:nth-child(${idx + 2}) .option`);
+                
+                options.forEach((opt, optIdx) => {
+                    if (optIdx === q.correct_index) {
+                        opt.classList.add('correct');
+                    }
+                    if (quizAnswers[idx] === optIdx && optIdx !== q.correct_index) {
+                        opt.classList.add('incorrect');
+                    }
+                });
+
+                if (quizAnswers[idx] === q.correct_index) {
+                    correct++;
+                }
+            });
+
+            const score = (correct / currentQuiz.questions.length) * 100;
+            
+            const scoreDiv = document.createElement('div');
+            scoreDiv.className = 'quiz-score';
+            scoreDiv.innerHTML = `Score: ${correct}/${currentQuiz.questions.length} (${score.toFixed(0)}%)`;
+            document.getElementById('quizContent').insertBefore(scoreDiv, document.getElementById('quizContent').firstChild);
+
+            // Submit to backend for mastery tracking
+            try {
+                await fetch(`${API_BASE}/quiz/submit`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        quiz_topic: currentQuiz.topic,
+                        answers: quizAnswers,
+                        correct_answers: correctAnswers
+                    })
+                });
+            } catch (error) {
+                console.error('Failed to submit quiz results');
+            }
+        }
+
+        // Tab Navigation
+        function showTab(tabName) {
+            const tabs = document.querySelectorAll('.nav-tab');
+            const sections = document.querySelectorAll('.content-section');
+
+            tabs.forEach(tab => tab.classList.remove('active'));
+            sections.forEach(section => section.classList.remove('active'));
+
+            event.target.classList.add('active');
+            document.getElementById(tabName + 'Section').classList.add('active');
+        }
+
+        // Drag and Drop
+        const uploadArea = document.getElementById('uploadArea');
+        if (uploadArea) {
+            uploadArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                uploadArea.classList.add('dragover');
+            });
+
+            uploadArea.addEventListener('dragleave', () => {
+                uploadArea.classList.remove('dragover');
+            });
+
+            uploadArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                uploadArea.classList.remove('dragover');
+                const files = e.dataTransfer.files;
+                document.getElementById('fileInput').files = files;
+                handleFiles(files);
+            });
+        }
+
+        // Check for existing session
+        window.addEventListener('load', () => {
+            const token = localStorage.getItem('token');
+            if (token) {
+                authToken = token;
+		showMainApp();	
+                // In production, verify token with backend
+                // For now, just show main app
+            }
+        });
+    </script>
+</boody>
+</html>
